@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:newapp/navigation/navigation_drawer.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+import 'hello.dart';
+
+class Login extends StatelessWidget {
+  const Login({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _createBody(context),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Ugly login screen"),
+        ),
+        drawer: NavigationDrawer(),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {}, child: Icon(Icons.arrow_forward)),
+        body: _createBody(context),
+      ),
     );
   }
 
