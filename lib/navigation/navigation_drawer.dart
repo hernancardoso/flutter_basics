@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:newapp/screens/hello.dart';
-import 'package:newapp/screens/login.dart';
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -14,6 +12,13 @@ class NavigationDrawer extends StatelessWidget {
             leading: Icon(Icons.home_filled),
             title: Text('Home'),
             onTap: () {
+              Navigator.of(context).pushNamed('/');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.home_filled),
+            title: Text('Hello'),
+            onTap: () {
               Navigator.of(context).pushNamed('/hello');
             },
           ),
@@ -22,6 +27,20 @@ class NavigationDrawer extends StatelessWidget {
             leading: Icon(Icons.login_outlined),
             onTap: () {
               Navigator.of(context).pushNamed('/login');
+            },
+          ),
+          ListTile(
+            title: Text('Register'),
+            leading: Icon(Icons.keyboard_alt),
+            onTap: () {
+              Navigator.of(context).pushNamed('/register');
+            },
+          ),
+          ListTile(
+            title: Text('Settings'),
+            leading: Icon(Icons.settings),
+            onTap: () {
+              Navigator.of(context).pushNamed('/settings');
             },
           ),
         ],
