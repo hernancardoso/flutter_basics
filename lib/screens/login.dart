@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/navigation/navigation_drawer.dart';
+import 'package:newapp/providers/authentication.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
-
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
+  final _form = GlobalKey<FormState>();
+  String email = "", password = "";
+
   @override
   Widget build(BuildContext context) {
     /*
       Gesture detector is used here to dismiss the keyboard if 
       the user touched another part of the screen (not the input text)
     */
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -23,7 +28,7 @@ class _LoginState extends State<Login> {
         ),
         drawer: NavigationDrawer(),
         floatingActionButton: FloatingActionButton(
-            onPressed: () {}, child: Icon(Icons.arrow_forward)),
+            onPressed: _saveForm, child: Icon(Icons.arrow_forward)),
         body: _createBody(context),
       ),
     );
@@ -40,7 +45,7 @@ class _LoginState extends State<Login> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ..._formInputs(),
+                _formInputs(),
                 SizedBox(height: 50.0),
                 _orDisplay(),
                 SizedBox(height: 20.0),
@@ -53,27 +58,33 @@ class _LoginState extends State<Login> {
     );
   }
 
-  List<Widget> _formInputs() {
-    return [
-      TextFormField(
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Email',
-          prefixIcon: Icon(Icons.mail_outline, size: 20),
-        ),
-        textInputAction: TextInputAction.next,
-      ),
-      SizedBox(height: 20.0),
-      TextFormField(
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Password',
-          prefixIcon: Icon(Icons.vpn_key, size: 20),
-        ),
-        obscureText: true,
-        textInputAction: TextInputAction.next,
-      )
-    ];
+  Widget _formInputs() {
+    return Form(
+        key: _form,
+        child: Column(
+          children: [
+            TextFormField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Email',
+                prefixIcon: Icon(Icons.mail_outline, size: 20),
+              ),
+              textInputAction: TextInputAction.next,
+              onSaved: (email) => this.email = email.toString(),
+            ),
+            SizedBox(height: 20.0),
+            TextFormField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password',
+                prefixIcon: Icon(Icons.vpn_key, size: 20),
+              ),
+              obscureText: true,
+              textInputAction: TextInputAction.next,
+              onSaved: (password) => this.password = password.toString(),
+            )
+          ],
+        ));
   }
 
   Widget _orDisplay() {
@@ -126,5 +137,12 @@ class _LoginState extends State<Login> {
         )
       ],
     );
+  }
+
+  Future<void> _saveForm() async {
+    //if (_form.currentState!.validate()) {
+    _form.currentState!.save();
+    Provider.of<Authentication>(context, listen: false).signIn(email, password);
+    //}
   }
 }

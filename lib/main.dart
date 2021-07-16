@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newapp/providers/authentication.dart';
 import 'package:newapp/providers/estado.dart';
 import 'package:newapp/screens/hello.dart';
 import 'package:newapp/screens/login.dart';
@@ -18,14 +19,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     dynamic page;
 
-    return ChangeNotifierProvider(
-      create: (context) => Estado(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: Estado(),
+        ),
+        ChangeNotifierProvider.value(
+          value: Authentication(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         initialRoute: '/register',
         theme: ThemeData(
-          primarySwatch: Colors.amber,
+          primarySwatch: Colors.blueGrey,
         ),
         onGenerateRoute: (settings) {
           if (settings.name == '/') {

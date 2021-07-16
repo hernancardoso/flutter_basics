@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:newapp/navigation/navigation_drawer.dart';
+import 'package:newapp/providers/authentication.dart';
 import 'package:newapp/widgets/password_form_field.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   static const routeName = "/register";
-
   Register({Key? key}) : super(key: key);
 
   @override
@@ -12,8 +13,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  String email = "", password = "";
   final _form = GlobalKey<FormState>();
-  bool _hidePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +43,17 @@ class _RegisterState extends State<Register> {
                               : null,
                       decoration: InputDecoration(labelText: 'Email'),
                       textInputAction: TextInputAction.next,
-                      onSaved: (_) {},
+                      onSaved: (email) => this.email = email.toString(),
                     ),
                     TextFormField(
                       decoration: InputDecoration(labelText: 'Testing'),
                       textInputAction: TextInputAction.next,
                       onSaved: (_) {},
                     ),
-                    PasswordFormField(onSaved: (_) {
-                      print("CACA");
-                    }),
+                    PasswordFormField(
+                      onSaved: (password) =>
+                          this.password = password.toString(),
+                    ),
                   ],
                 ),
               ),
@@ -62,9 +64,13 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     if (_form.currentState!.validate()) {
       _form.currentState!.save();
+      Provider.of<Authentication>(context, listen: false)
+          .signUp(email, password);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Processing Data')));
     }
   }
 }
